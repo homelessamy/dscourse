@@ -106,12 +106,7 @@ NUMERIC_COLS = [
 def load_data(config: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Loads train and test CSVs, validates columns, and logs dataset information.
-    
-    Args:
-        config: Configuration dictionary containing paths and target.
-        
-    Returns:
-        tuple containing (train_df, test_df)
+
     """
     train_df = pd.read_csv(config["train_path"])
     test_df = pd.read_csv(config["test_path"])
@@ -126,13 +121,9 @@ def load_data(config: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Engineers features strictly keeping pure functions without side effects.
+    features strictly keepi
     
-    Args:
-        df: Input DataFrame to transform.
-        
-    Returns:
-        pd.DataFrame with newly engineered features.
+
     """
     df_out = df.copy()
 
@@ -155,14 +146,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
 
 def build_preprocessor(categorical_cols: list, numeric_cols: list) -> ColumnTransformer:
     """
-    Constructs a ColumnTransformer to handle imputation and scaling/encoding.
-    
-    Args:
-        categorical_cols: List of categorical column names.
-        numeric_cols: List of numeric column names.
-        
-    Returns:
-        A fitted ColumnTransformer object.
+columnTransformer to handle imputation and scaling/encoding.
     """
     numeric_pipeline = Pipeline([
         ('imputer', SimpleImputer(strategy='median')),
@@ -185,14 +169,7 @@ def build_preprocessor(categorical_cols: list, numeric_cols: list) -> ColumnTran
 
 def build_pipelines(preprocessor: ColumnTransformer, config: dict) -> dict[str, Pipeline]:
     """
-    Builds a set of distinct ML pipelines.
-    
-    Args:
-        preprocessor: Configured sklearn ColumnTransformer.
-        config: Configuration dict to retrieve model hyperparameters.
-        
-    Returns:
-        Dictionary of strictly instantiated sklearn Pipelines.
+ instantiated sklearn Pipelines.
     """
     models_cfg = config["models"]
     
@@ -226,15 +203,8 @@ def build_pipelines(preprocessor: ColumnTransformer, config: dict) -> dict[str, 
 
 def evaluate_pipelines(pipelines: dict, X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series, y_test: pd.Series, config: dict) -> tuple[pd.DataFrame, dict]:
     """
-    Scores models using GridSearchCV / RandomizedSearchCV and a hold-out test set.
-    
-    Args:
-        pipelines: dict of model pipelines.
-        X_train, X_test, y_train, y_test: training and testing subsets.
-        config: global configuration dictionary.
-    
-    Returns:
-        Pandas DataFrame containing leaderboard statistics, and the fitted pipelines dict.
+    scores models using GridSearchCV / RandomizedSearchCV and a hold-out test set.
+
     """
     results = []
     fitted_pipelines = {}
@@ -466,15 +436,8 @@ def _plot_correlation_heatmap(df: pd.DataFrame, target: str, out_path: Path, dpi
 
 def generate_visualizations(pipelines: dict, results_df: pd.DataFrame, X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series, y_test: pd.Series, feature_names: list, config: dict) -> None:
     """
-    Executes the suite of analytical and exploratory visualizations.
-    
-    Args:
-        pipelines: dict of model pipelines.
-        results_df: leaderboard DataFrame.
-        X_train, X_test: subsets of the features DataFrame.
-        y_train, y_test: subsets of the target Series.
-        feature_names: extracted list of features after prepocessing.
-        config: the global system configuration.
+    visualizations
+
     """
     out_dir = Path(config["output_dir"])
     dpi = config["figure_dpi"]
@@ -498,10 +461,7 @@ def generate_visualizations(pipelines: dict, results_df: pd.DataFrame, X_train: 
 
 def print_report(results_df: pd.DataFrame) -> None:
     """
-    Terminal print-out highlighting leaderboards and model performance.
-    
-    Args:
-        results_df: Standardized metrics DataFrame.
+    Termi
     """
     table_columns = ["Model", "Test_ROC_AUC", "Test_Accuracy", "Test_F1", "Best_CV_ROC_AUC"]
     print("\n" + tabulate(results_df[table_columns], headers="keys", showindex=False, tablefmt="rounded_outline", floatfmt=".4f"))
@@ -516,12 +476,7 @@ def print_report(results_df: pd.DataFrame) -> None:
 def generate_submission(best_pipeline: Pipeline, test_df: pd.DataFrame, test_ids: pd.Series, config: dict) -> None:
     """
     Saves predictions for test submissions.
-    
-    Args:
-        best_pipeline: Highest performing ML pipeline to make predictions.
-        test_df: The test data pool features.
-        test_ids: Identifiers correlated directly to the requested output index.
-        config: System settings including targeted outputs.
+
     """
     test_features = engineer_features(test_df)
     test_preds = best_pipeline.predict(test_features)
